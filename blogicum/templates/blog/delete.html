@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if comment %}Удаление комментария{% else %}Удаление поста{% endif %}
+{% endblock %}
+
+{% block content %}
+  <h2>{% if comment %}Удалить комментарий{% else %}Удалить пост{% endif %}</h2>
+  
+  <div class="card">
+    <div class="card-body">
+      {% if comment %}
+        <p><strong>Комментарий:</strong></p>
+        <p>{{ comment.text }}</p>
+        <p><strong>Автор:</strong> {{ comment.author.username }}</p>
+      {% else %}
+        <p><strong>Пост:</strong> {{ post.title }}</p>
+        <p><strong>Текст:</strong> {{ post.text|truncatewords:50 }}</p>
+      {% endif %}
+      
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Подтвердить удаление</button>
+        <a href="{% url 'blog:post_detail' comment.post.id|default:post.id %}" class="btn btn-secondary">Отмена</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

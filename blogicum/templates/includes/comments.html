@@ -23,7 +23,7 @@
     </div>
   </div>
   
-  {% if not forloop.last %}
+  {% if user == comment.author %}
     <div class="comment-actions">
       <a class="btn btn-sm text-muted" href="{% url 'blog:edit_comment' post.id comment.id %}" role="button">
         Отредактировать комментарий
@@ -32,6 +32,9 @@
         Удалить комментарий
       </a>
     </div>
+  {% endif %}
+  
+  {% if not forloop.last %}
     <hr>
   {% endif %}
 {% endfor %}
