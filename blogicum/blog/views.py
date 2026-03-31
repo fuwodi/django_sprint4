@@ -3,7 +3,6 @@ from datetime import date
 from django import forms
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserChangeForm
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
@@ -29,6 +28,12 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea(attrs={'rows': 3}),
         }
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'email']
 
 
 def index(request):
@@ -183,13 +188,13 @@ def edit_profile(request, username):
         return redirect('blog:profile', username=username)
 
     if request.method == 'POST':
-        profile_form = UserChangeForm(request.POST, instance=profile_owner)
+        profile_form = ProfileEditForm(request.POST, instance=profile_owner)
         if profile_form.is_valid():
             profile_form.save()
             update_session_auth_hash(request, profile_owner)
             return redirect('blog:profile', username=username)
     else:
-        profile_form = UserChangeForm(instance=profile_owner)
+        profile_form = ProfileEditForm(instance=profile_owner)
 
     return render(
         request,
