@@ -157,6 +157,7 @@ def delete_post(request, post_id):
 
 
 def profile(request, username):
+    today_date = date.today()
     profile_user = get_object_or_404(User, username=username)
 
     if request.user == profile_user:
