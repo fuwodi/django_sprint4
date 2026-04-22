@@ -166,8 +166,15 @@ def profile(request, username):
     else:
         profile_posts_qs = Post.objects.filter(
             author=profile_user,
-            category__is_published=True,
-        ).order_by("-pub_date")
+            is_published=True,             
+            pub_date__lte=today_date,      
+            category__is_published=True,   
+        ).select_related("category", "location", "author").order_by("-pub_date")
+
+        #profile_posts_qs = Post.objects.filter(
+            #author=profile_user,
+            #category__is_published=True,
+        #).order_by("-pub_date")
 
     paginator = Paginator(profile_posts_qs, 10)
     page_num = request.GET.get('page')
